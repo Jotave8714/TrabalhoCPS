@@ -1,0 +1,30 @@
+const int pinCintoSeguranca = 14;
+const int pinPotenciometro = 34;
+const int pinAlarme = 27;
+
+void setup() {
+  pinMode(pinCintoSeguranca, INPUT);
+  pinMode(pinPotenciometro, INPUT);
+  pinMode(pinAlarme, OUTPUT);
+  Serial.begin(115200);
+}
+
+void loop() {
+  int estadoCinto = digitalRead(pinCintoSeguranca);
+  int valorPotenciometro = analogRead(pinPotenciometro);
+  int velocidade = map(valorPotenciometro, 0, 4095, 0, 100);
+
+  Serial.print("Cinto de Segurança: ");
+  Serial.print(estadoCinto == HIGH ? "ON" : "OFF");
+  Serial.print(", Velocidade: ");
+  Serial.print(velocidade);
+  Serial.println(" km/h");
+
+  if (estadoCinto == LOW && velocidade > 10) {
+    digitalWrite(pinAlarme, HIGH);
+  } else {
+    digitalWrite(pinAlarme, LOW);
+  }
+
+  delay(500);
+}
