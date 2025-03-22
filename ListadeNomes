@@ -1,0 +1,84 @@
+package lista2_Av1;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        scanner.nextLine();
+        ListaDeNomes ln = new ListaDeNomes(N);
+
+        for (int i = 0; i < N; i++) {
+            String nome = scanner.nextLine();
+            ln.addNome(nome);
+        }
+        ln.ordenarTamanho();
+        ln.imprimirNomes();
+    }
+}
+
+class ListaDeNomes {
+    private String[][] grupos;
+    private int[] tamanhos;
+    private int capacidade;
+    private int totalGrupos;
+
+    public ListaDeNomes(int capacidade) {
+        this.capacidade = capacidade;
+        this.grupos = new String[capacidade][capacidade];
+        this.tamanhos = new int[capacidade];
+        this.totalGrupos = 0;
+    }
+
+    public void addNome(String nome) {
+        int tamanhoNome = nome.length();
+        for (int i = 0; i < totalGrupos; i++) {
+            if (tamanhos[i] == tamanhoNome) {
+                for (int j = 0; j < capacidade; j++) {
+                    if (grupos[i][j] == null) {
+                        grupos[i][j] = nome;
+                        return;
+                    }
+                }
+            }
+        }
+        grupos[totalGrupos][0] = nome;
+        tamanhos[totalGrupos] = tamanhoNome;
+        totalGrupos++;
+    }
+
+    public void ordenarTamanho() {
+        for (int i = 0; i < totalGrupos - 1; i++) {
+            for (int j = 0; j < totalGrupos - i - 1; j++) {
+                if (tamanhos[j] > tamanhos[j + 1]) {
+                    int tempTamanho = tamanhos[j];
+                    tamanhos[j] = tamanhos[j + 1];
+                    tamanhos[j + 1] = tempTamanho;
+
+                    String[] tempGrupo = grupos[j];
+                    grupos[j] = grupos[j + 1];
+                    grupos[j + 1] = tempGrupo;
+                }
+            }
+        }
+    }
+
+    public void imprimirNomes() {
+        for (int j = 0; j < capacidade; j++) {
+            boolean primeiro = true;
+            for (int i = 0; i < totalGrupos; i++) {
+                if (grupos[i][j] != null) {
+                    if (!primeiro) {
+                        System.out.print(", ");
+                    }
+                    System.out.print(grupos[i][j]);
+                    primeiro = false;
+                }
+            }
+            if (!primeiro) {
+                System.out.println();
+            }
+        }
+    }
+}
